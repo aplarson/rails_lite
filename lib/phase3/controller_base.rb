@@ -11,8 +11,7 @@ module Phase3
       raw_template = File
           .read("views/#{self.class.to_s.underscore}/#{template_name}.html.erb")
       template = ERB.new(raw_template)
-      binding
-      render_content(template.result, 'text/html')
+      render_content(template.result(binding), 'text/html')
     end
   end
 end
