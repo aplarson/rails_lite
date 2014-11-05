@@ -7,5 +7,6 @@ module Phase6
       self.send(name)
       render(name) unless @already_built_response
     end
+    
   end
 end
