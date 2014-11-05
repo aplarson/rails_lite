@@ -57,19 +57,13 @@ module Phase5
     # should not matter in context
     def deep_merge(hash1, hash2)
       merged_hash = {}
-      first_keys = hash1.keys
-      second_keys = hash2.keys
-      first_keys.each do |key|
-        if !(second_keys.include?(key))
-          merged_hash[key] = hash1[key]
-        else
-          merged_hash[key] = deep_merge(hash1[key], hash2[key])
-        end
+      common_keys = hash1.keys.select { |key| hash2.keys.include?(key) }
+      common_keys.each do |key|
+        merged_hash[key] = deep_merge(hash1[key], hash2[key])
+        hash1.delete(key)
+        hash2.delete(key)
       end
-      second_keys.each do |key|
-        merged_hash[key] = hash2[key] unless merged_hash.keys.include?(key)
-      end
-      merged_hash
+      merged_hash.merge!(hash1).merge!(hash2)
     end
   end
 end
