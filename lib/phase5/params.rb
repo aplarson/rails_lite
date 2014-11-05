@@ -53,6 +53,8 @@ module Phase5
       { array[0] => generate_nested_hash(array[1..-1], value) }
     end
     
+    # breaks if both hashes have a key but one points to a non-hash object; this
+    # should not matter in context
     def deep_merge(hash1, hash2)
       merged_hash = {}
       first_keys = hash1.keys

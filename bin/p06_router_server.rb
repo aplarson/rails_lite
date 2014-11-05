@@ -24,13 +24,21 @@ class StatusesController < Phase6::ControllerBase
     statuses = $statuses.select do |s|
       s[:cat_id] == Integer(params[:cat_id])
     end
-
+    flash["current"] ||= 0
+    flash["current"] += 1
+    flash_el = flash["current"].to_s
+    flash[flash_el] = "An element"
     render_content(statuses.to_s, "text/text")
   end
 end
 
 class Cats2Controller < Phase6::ControllerBase
   def index
+    flash["current"] ||= 0
+    flash["current"] += 1
+    flash_el = flash["current"].to_s
+    flash[flash_el] = "An element"
+    flash.now(flash_el + flash_el, "A flash element")
     render_content($cats.to_s, "text/text")
   end
 end
