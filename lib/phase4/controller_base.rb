@@ -6,13 +6,11 @@ module Phase4
     def redirect_to(url)
       super(url)
       session.store_session(@res)
-    
     end
 
     def render_content(content, type)
       super(content, type)
       session.store_session(@res)
-
     end
 
     # method exposing a `Session` object
