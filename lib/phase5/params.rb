@@ -35,7 +35,10 @@ module Phase5
     def parse_www_encoded_form(www_encoded_form)
       pairs = URI.decode_www_form(www_encoded_form)
       pairs.each do |pair|
-        @params.merge!(generate_nested_hash(parse_key(pair[0]), pair[1]))
+        @params = deep_merge(
+                    @params, 
+                    generate_nested_hash(parse_key(pair[0]), pair[1])
+                  )
       end
     end
 
@@ -48,6 +51,23 @@ module Phase5
     def generate_nested_hash(array, value)
       return { array[0] => value } if array.length == 1
       { array[0] => generate_nested_hash(array[1..-1], value) }
+    end
+    
+    def deep_merge(hash1, hash2)
+      merged_hash = {}
+      first_keys = hash1.keys
+      second_keys = hash2.keys
+      first_keys.each do |key|
+        if !(second_keys.include?(key))
+          merged_hash[key] = hash1[key]
+        else
+          merged_hash[key] = deep_merge(hash1[key], hash2[key])
+        end
+      end
+      second_keys.each do |key|
+        merged_hash[key] = hash2[key] unless merged_hash.keys.include?(key)
+      end
+      merged_hash
     end
   end
 end
