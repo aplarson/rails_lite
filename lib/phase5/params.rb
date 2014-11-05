@@ -10,9 +10,14 @@ module Phase5
     # You haven't done routing yet; but assume route params will be
     # passed in as a hash to `Params.new` as below:
     def initialize(req, route_params = {})
+      @req = req
+      @params = route_params
+      parse_www_encoded_form(req.query_string) if req.query_string
+      parse_www_encoded_form(req.body) if req.body
     end
 
     def [](key)
+      @params[key]
     end
 
     def to_s
@@ -28,11 +33,21 @@ module Phase5
     # should return
     # { "user" => { "address" => { "street" => "main", "zip" => "89436" } } }
     def parse_www_encoded_form(www_encoded_form)
+      pairs = URI.decode_www_form(www_encoded_form)
+      pairs.each do |pair|
+        @params.merge!(generate_nested_hash(parse_key(pair[0]), pair[1]))
+      end
     end
 
     # this should return an array
     # user[address][street] should return ['user', 'address', 'street']
     def parse_key(key)
+      key.split(/\]\[|\[|\]/)
+    end
+    
+    def generate_nested_hash(array, value)
+      return { array[0] => value } if array.length == 1
+      { array[0] => generate_nested_hash(array[1..-1], value) }
     end
   end
 end
