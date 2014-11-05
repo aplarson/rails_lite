@@ -53,17 +53,33 @@ module Phase5
       { array[0] => generate_nested_hash(array[1..-1], value) }
     end
     
-    # breaks if both hashes have a key but one points to a non-hash object; this
-    # should not matter in context
     def deep_merge(hash1, hash2)
       merged_hash = {}
       common_keys = hash1.keys.select { |key| hash2.keys.include?(key) }
       common_keys.each do |key|
-        merged_hash[key] = deep_merge(hash1[key], hash2[key])
+        if hash1[key].is_a?(Hash) && hash2[key].is_a?(Hash)
+          merged_hash[key] = deep_merge(hash1[key], hash2[key])
+        else
+          merged_hash[key] = hash2[key]
+        end
         hash1.delete(key)
         hash2.delete(key)
       end
       merged_hash.merge!(hash1).merge!(hash2)
+    end
+    
+    # iterative params hash constructor
+    def parse_www_encoded_form_iterative(www_encoded_form)
+      pairs = URI.decode_www_form(www_encoded_form)
+      pairs.each do |pair|
+        key_set = parse_key(pair[0])
+        current = @params
+        key_set[0..-2].each do |key|
+          current[key] ||= {}
+          current = current[key]
+        end
+        current[key_set[-1]] = pair[1]
+      end
     end
   end
 end

@@ -1,8 +1,6 @@
 module CSRFProtector
   def form_authenticity_token
-    token = SecureRandom.urlsafe_base64
-    session['csrf_token'] = token
-    token
+    session['csrf_token']
   end
   
   def authentic_form?

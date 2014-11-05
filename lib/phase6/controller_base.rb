@@ -1,8 +1,9 @@
 require_relative '../phase5/controller_base'
-
+require_relative 'csrf'
 
 module Phase6
   class ControllerBase < Phase5::ControllerBase
+    include CSRFProtector
     # use this with the router to call action_name (:index, :show, :create...)
     def invoke_action(name)
       self.send(name)
@@ -22,7 +23,6 @@ module Phase6
     def render_content(content, type)
       super(content, type)
       flash.store_session(@res)
-
     end
     
   end

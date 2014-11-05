@@ -10,7 +10,7 @@ module Phase4
       if cookie
         @contents = JSON.parse(cookie.value)
       else
-        @contents = {}
+        @contents = { 'csrf_token' => SecureRandom.urlsafe_base64 }
       end
     end
 
