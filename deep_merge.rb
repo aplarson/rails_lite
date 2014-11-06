@@ -16,7 +16,7 @@ end
 # cases: if hashes do not share keys, merge!
 #        if hashes do share keys, deep merge
 
-    # user[address][street]=main&user[address][zip]=89436
+# sample case: user[address][street]=main&user[address][zip]=89436
     
 hash1 = { 'user' => { 'address' => { 'street' => { 'name' => 'main', 'type' => 'st' } } } }
 hash2 = { 'user' => { 'address' => { 'zip' => 89436 } } }
